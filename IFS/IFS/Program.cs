@@ -39,7 +39,7 @@ namespace IFS
             ControlPanelSlimViewValidator validator1 = new ControlPanelSlimViewValidator(tbc);
             ControlPanelSlimViewValidator validator2 = new ControlPanelSlimViewValidator(ncp);
 
-            var mainForm = new MainForm2(tbc, ncp, fdg, fev);
+            var mainForm = new MainForm2();
             var boxDimensionCalculatorFactory = new BoxDimensionCalculatorFactory();
             var mainPresenter = new MainViewPresenter(mainForm, tbc, ncp,fdg,fev, boxDimensionCalculatorFactory);
             

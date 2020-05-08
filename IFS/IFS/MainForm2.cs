@@ -41,11 +41,6 @@ namespace IFS
         private DockContent _dataGridDockContent;
         private DockContent _editorDockContent;
 
-        private TrackBarControlPanelView _trackBarControlPanelView;
-        private NumbersControlPanelView _numbersControlPanelView;
-        private FractalDataGridView _fractalDataGridView;
-        private FractalEditorView _fractalEditorView;
-
         private IDictionary<IDockContent, IFractal> _dockContentFractalDictionary = new Dictionary<IDockContent, IFractal>();
 
         public event SelectedFractalEventHandler SelectedChanged;
@@ -66,21 +61,13 @@ namespace IFS
         public event EventHandler FractalEditorMenuItemClick;
         public event EventHandler FractalDataGridMenuItemClick;
 
-        public MainForm2(
-            TrackBarControlPanelView trackBarControlPanelView,
-            NumbersControlPanelView numbersControlPanelView,
-            FractalDataGridView fractalDataGridView,
-            FractalEditorView fractalEditorView)
+        public MainForm2()
         {
             InitializeComponent();
             this.SetStyle(ControlStyles.DoubleBuffer |
                ControlStyles.OptimizedDoubleBuffer |
                ControlStyles.UserPaint |
                ControlStyles.AllPaintingInWmPaint, true);
-            _trackBarControlPanelView = trackBarControlPanelView;
-            _numbersControlPanelView = numbersControlPanelView;
-            _fractalDataGridView = fractalDataGridView;
-            _fractalEditorView = fractalEditorView;
         }
 
         public IDictionary<IDockContent, IFractal> DockContentFractalDictionary { get { return _dockContentFractalDictionary; } }
