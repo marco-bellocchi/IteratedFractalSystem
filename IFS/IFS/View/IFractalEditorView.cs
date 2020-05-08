@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using IFS.Presenter;
+using System.Windows.Forms;
 
 namespace IFS.View
 {
@@ -17,5 +18,7 @@ namespace IFS.View
         void ShowErrorMessage(string whyNot);
 
         bool IsAppliedImmediatelyChecked { get; }
+
+        UserControl UserControl { get;  }
     }
 }

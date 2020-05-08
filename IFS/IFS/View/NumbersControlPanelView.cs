@@ -38,6 +38,8 @@ namespace IFS.View
 
         public string ZoomPointY { get { return _zoomYTb.Text; } }
 
+        public UserControl UserControl { get { return this; } }
+
         public void RefreshView(int x, int y, float zoom, int rotation, PointF zoomPoint, PointF rotPoint)
         {
             _xTranslationTb.Text = x.ToString();

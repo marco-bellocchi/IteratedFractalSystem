@@ -39,6 +39,8 @@ namespace IFS.View
             }
         }
 
+        public UserControl UserControl { get { return this; } }
+
         public void ShowErrorMessage(string error)
         {
             MessageBox.Show(error, "Error");

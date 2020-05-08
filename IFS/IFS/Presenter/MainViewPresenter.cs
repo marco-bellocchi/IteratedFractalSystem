@@ -92,6 +92,31 @@ namespace FractalRendererLibrary.Presenter
             _mainView.DisplayGDIClick += _mainView_DisplayGDIClick;
             _mainView.DisplayOpenGLClick += _mainView_DisplayOpenGLClick;
             _mainView.CompositeViewClosed += _mainView_CompositeViewClosed;
+
+            _mainView.TrackBarsControlMenuItemClick += _mainView_TrackBarsControlMenuItemClick;
+            _mainView.NumbersControlMenuItemClick += _mainView_NumbersControlMenuItemClick;
+            _mainView.FractalEditorMenuItemClick += _mainView_FractalEditorMenuItemClick;
+            _mainView.FractalDataGridMenuItemClick += _mainView_FractalDataGridMenuItemClick;
+        }
+
+        private void _mainView_FractalDataGridMenuItemClick(object sender, EventArgs e)
+        {
+            InitFractalDataGrid();
+        }
+
+        private void _mainView_FractalEditorMenuItemClick(object sender, EventArgs e)
+        {
+            InitFractalEditor();
+        }
+
+        private void _mainView_NumbersControlMenuItemClick(object sender, EventArgs e)
+        {
+            InitNumbersControlPanel();
+        }
+
+        private void _mainView_TrackBarsControlMenuItemClick(object sender, EventArgs e)
+        {
+           InitTrackBarsControlPanel();
         }
 
         private void _mainView_CompositeViewClosed(object sender, EventArgs e)
@@ -264,18 +289,69 @@ namespace FractalRendererLibrary.Presenter
             {
                 _canRemoveFractals = false;
                 _mainView.SelectedChanged -= new SelectedFractalEventHandler(SelectedFractalChanged);
-                _mainView.ClearAll();
+                ClearAll();
                 _rendererAbstractFactory = new GDIRendererAbstractFactory();
                 foreach (var fractal in _document.Fractals)
                     AddTab(fractal);
                 _mainView.SelectedChanged += new SelectedFractalEventHandler(SelectedFractalChanged);
-                _mainView.Select(_selected);
-                _mainView.DisplayRendering(RenderingEnum.GDI);
+                Select(_selected);
+                DisplayRendering(RenderingEnum.GDI);
                 RefreshMainView();
             }
             finally
             {
                 _canRemoveFractals = true;
+            }
+        }
+
+        private void Select(IFractal selected)
+        {
+            for (int index = _mainView.DockPanel.Contents.Count - 1; index >= 0; index--)
+            {
+                if (_mainView.DockPanel.Contents[index] is IDockContent)
+                {
+                    IDockContent content = (IDockContent)_mainView.DockPanel.Contents[index];
+                    if (_mainView.DockContentFractalDictionary.ContainsKey(content))
+                    {
+                        var fractal = _mainView.DockContentFractalDictionary[content];
+                        if (fractal == selected)
+                        {
+                            content.DockHandler.Activate();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void DisplayRendering(RenderingEnum rendering)
+        {
+            switch (rendering)
+            {
+                case RenderingEnum.GDI:
+                    _mainView.GdiToolStripMenuItem.Checked = true;
+                    _mainView.OpenGlToolStripMenuItem.Checked = false;
+                    break;
+                default:
+                    _mainView.GdiToolStripMenuItem.Checked = false;
+                    _mainView.OpenGlToolStripMenuItem.Checked = true;
+                    break;
+            }
+        }
+
+        private void ClearAll()
+        {
+            _mainView.DockContentFractalDictionary.Clear();
+            for (int index = _mainView.DockPanel.Contents.Count - 1; index >= 0; index--)
+            {
+                if (_mainView.DockPanel.Contents[index] is IDockContent)
+                {
+                    IDockContent content = (IDockContent)_mainView.DockPanel.Contents[index];
+                    if (content != _mainView.NumberDockContent &&
+                        content != _mainView.TrackBarsDockContent &&
+                        content != _mainView.EditorDockContent &&
+                        content != _mainView.DataGridDockContent)
+                        content.DockHandler.Close();
+                }
             }
         }
 
@@ -285,13 +361,13 @@ namespace FractalRendererLibrary.Presenter
             {
                 _canRemoveFractals = false;
                 _mainView.SelectedChanged -= new SelectedFractalEventHandler(SelectedFractalChanged);
-                _mainView.ClearAll();
+                ClearAll();
                 _rendererAbstractFactory = new OpenGLRendererAbstractFactory();
                 foreach (var fractal in _document.Fractals)
                     AddTab(fractal);
                 _mainView.SelectedChanged += new SelectedFractalEventHandler(SelectedFractalChanged);
-                _mainView.Select(_selected);
-                _mainView.DisplayRendering(RenderingEnum.OpenGL);
+                Select(_selected);
+                DisplayRendering(RenderingEnum.OpenGL);
                 RefreshMainView();
             }
             finally
@@ -440,8 +516,9 @@ namespace FractalRendererLibrary.Presenter
         private void _mainView_Load(object sender, EventArgs e)
         {
             _rendererAbstractFactory = new GDIRendererAbstractFactory();
-            _mainView.DisplayRendering(RenderingEnum.GDI);
+            DisplayRendering(RenderingEnum.GDI);
             InitPredefinedMenuFractals();
+            IntializeFractalEditors();
         }
 
         private void SelectedFractalChanged(object sender, FractalEventArgs e)
@@ -482,7 +559,7 @@ namespace FractalRendererLibrary.Presenter
             }
             if (_document.Fractals.Count == 0)
             {
-                _mainView.ClearAll();
+                ClearAll();
                 _viewStatus.Clear();
                 _selected = null;
                 RefreshMainView();
@@ -494,6 +571,79 @@ namespace FractalRendererLibrary.Presenter
                     AddTab(fractal);
                 }
             }
+        }
+
+        private void IntializeFractalEditors()
+        {
+            InitTrackBarsControlPanel();
+            InitNumbersControlPanel();
+            InitFractalEditor();
+            InitFractalDataGrid();
+        }
+
+        private void InitTrackBarsControlPanel()
+        {
+           
+            if (_mainView.TrackBarsDockContent != null)
+            {
+                 _mainView.TrackBarsDockContent.Activate();
+                return;
+            }
+            DockContent trackBarsDockContent = new DockContent();
+            _trackBarControlPanelView.UserControl.Dock = DockStyle.Fill;
+            trackBarsDockContent.Controls.Add(_trackBarControlPanelView.UserControl);
+            trackBarsDockContent.Show(_mainView.DockPanel, DockState.DockRightAutoHide);
+            trackBarsDockContent.Text = "TrackBars Control Panel";
+            trackBarsDockContent.HideOnClose = true;
+            _mainView.TrackBarsDockContent = trackBarsDockContent;
+        }
+
+        private void InitNumbersControlPanel()
+        {
+            if (_mainView.NumberDockContent != null)
+            {
+                _mainView.NumberDockContent.Activate();
+                return;
+            }
+            DockContent numberDockContent = new DockContent();
+            _numbersControlPanelView.UserControl.Dock = DockStyle.Fill;
+            numberDockContent.Controls.Add(_numbersControlPanelView.UserControl);
+            numberDockContent.Show(_mainView.DockPanel, DockState.DockRightAutoHide);
+            numberDockContent.Text = "Numbers Control Panel";
+            numberDockContent.HideOnClose = true;
+            _mainView.NumberDockContent = numberDockContent;
+        }
+
+        private void InitFractalEditor()
+        {
+            if (_mainView.EditorDockContent != null)
+            {
+                _mainView.EditorDockContent.Activate();
+                return;
+            }
+            DockContent editorDockContent = new DockContent();
+            _fractalEditorView.UserControl.Dock = DockStyle.Fill;
+            editorDockContent.Controls.Add(_fractalEditorView.UserControl);
+            editorDockContent.Show(_mainView.DockPanel, DockState.DockRightAutoHide);
+            editorDockContent.Text = "Fractal Transformations Editor";
+            editorDockContent.HideOnClose = true;
+            _mainView.EditorDockContent = editorDockContent;
+        }
+
+        private void InitFractalDataGrid()
+        {
+            if (_mainView.DataGridDockContent != null)
+            {
+                _mainView.DataGridDockContent.Activate();
+                return;
+            }
+            DockContent dataGridDockContent = new DockContent();
+            _fractalDataGridView.UserControl.Dock = DockStyle.Fill;
+            dataGridDockContent.Controls.Add(_fractalDataGridView.UserControl);
+            dataGridDockContent.Show(_mainView.DockPanel, DockState.DockLeftAutoHide);
+            dataGridDockContent.Text = "Fractal Data Grid";
+            dataGridDockContent.HideOnClose = true;
+            _mainView.DataGridDockContent = dataGridDockContent;
         }
     }
 }

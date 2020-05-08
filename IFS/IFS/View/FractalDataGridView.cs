@@ -25,5 +25,7 @@ namespace IFS.View
             });
            
         }
+
+        public UserControl UserControl { get { return this; } }
     }
 }

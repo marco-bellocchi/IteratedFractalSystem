@@ -61,6 +61,10 @@ namespace IFS
         public event EventHandler DisplayGDIClick;
         public event EventHandler DisplayOpenGLClick;
         public event EventHandler CompositeViewClosed;
+        public event EventHandler TrackBarsControlMenuItemClick;
+        public event EventHandler NumbersControlMenuItemClick;
+        public event EventHandler FractalEditorMenuItemClick;
+        public event EventHandler FractalDataGridMenuItemClick;
 
         public MainForm2(
             TrackBarControlPanelView trackBarControlPanelView,
@@ -77,12 +81,16 @@ namespace IFS
             _numbersControlPanelView = numbersControlPanelView;
             _fractalDataGridView = fractalDataGridView;
             _fractalEditorView = fractalEditorView;
-            IntializeFractalEditors();
         }
 
         public IDictionary<IDockContent, IFractal> DockContentFractalDictionary { get { return _dockContentFractalDictionary; } }
-
         public DockPanel DockPanel { get { return _dockPanel; } }
+        public DockContent NumberDockContent { get { return _numberDockContent; } set { _numberDockContent = value; } }
+        public DockContent TrackBarsDockContent { get { return _trackBarsDockContent; } set { _trackBarsDockContent = value; } }
+        public DockContent DataGridDockContent { get { return _dataGridDockContent; } set { _dataGridDockContent = value; } }
+        public DockContent EditorDockContent { get { return _editorDockContent; } set { _editorDockContent = value; } }
+        public ToolStripMenuItem GdiToolStripMenuItem { get { return _gdiToolStripMenuItem; } }
+        public ToolStripMenuItem OpenGlToolStripMenuItem { get { return _openGLToolStripMenuItem; } }
         
 
         public bool AskForFilePathToOpen(out string filePath)
@@ -115,128 +123,9 @@ namespace IFS
             Text = Text.Remove(Text.Length - 1, 1);
         }
 
-        public void ClearAll()
-        {
-            _dockContentFractalDictionary.Clear();
-            for (int index = _dockPanel.Contents.Count - 1; index >= 0; index--)
-            {
-                if (_dockPanel.Contents[index] is IDockContent)
-                {
-                    IDockContent content = (IDockContent)_dockPanel.Contents[index];
-                    if(content != _numberDockContent &&
-                        content != _trackBarsDockContent &&
-                        content != _editorDockContent &&
-                        content != _dataGridDockContent)
-                            content.DockHandler.Close();
-                }
-            }
-        }
-
-        public void Select(IFractal selected)
-        {
-            for (int index = _dockPanel.Contents.Count - 1; index >= 0; index--)
-            {
-                if (_dockPanel.Contents[index] is IDockContent)
-                {
-                    IDockContent content = (IDockContent)_dockPanel.Contents[index];
-                    if (_dockContentFractalDictionary.ContainsKey(content))
-                    {
-                        var fractal = _dockContentFractalDictionary[content];
-                        if (fractal == selected)
-                        {
-                            content.DockHandler.Activate();
-                        }
-                    }
-                }
-            }
-        }
-
-        public void DisplayRendering(RenderingEnum rendering)
-        {
-            switch (rendering)
-            {
-                case RenderingEnum.GDI:
-                    _gdiToolStripMenuItem.Checked = true;
-                    _openGLToolStripMenuItem.Checked = false;
-                    break;
-                default:
-                    _gdiToolStripMenuItem.Checked = false;
-                    _openGLToolStripMenuItem.Checked = true;
-                    break;
-            }
-        }
-
         public ToolStripItem AddMenuItem(string name)
         {
             return _predefinedFractalsToolStripMenuItem.DropDownItems.Add(name);
-        }
-
-        private void InitTrackBarsControlPanel()
-        {
-            if (_trackBarsDockContent != null)
-            {
-                _trackBarsDockContent.Activate();
-                return;
-            }
-        	_trackBarsDockContent = new DockContent();
-        	_trackBarControlPanelView.Dock = DockStyle.Fill;
-            _trackBarsDockContent.Controls.Add(_trackBarControlPanelView);
-            _trackBarsDockContent.Show(_dockPanel, DockState.DockRightAutoHide);
-            _trackBarsDockContent.Text = "TrackBars Control Panel";
-            _trackBarsDockContent.HideOnClose = true;
-        }
-
-        private void InitNumbersControlPanel()
-        {
-            if (_numberDockContent != null)
-            {
-                _numberDockContent.Activate();
-                return;
-            }
-            _numberDockContent = new DockContent();
-            _numbersControlPanelView.Dock = DockStyle.Fill;
-            _numberDockContent.Controls.Add(_numbersControlPanelView);
-            _numberDockContent.Show(_dockPanel, DockState.DockRightAutoHide);
-            _numberDockContent.Text = "Numbers Control Panel";
-            _numberDockContent.HideOnClose = true;
-        }
-
-        private void InitFractalEditor()
-        {
-            if (_editorDockContent != null)
-            {
-                _editorDockContent.Activate();
-                return;
-            }
-            _editorDockContent = new DockContent();
-            _fractalEditorView.Dock = DockStyle.Fill;
-            _editorDockContent.Controls.Add(_fractalEditorView);
-            _editorDockContent.Show(_dockPanel, DockState.DockRightAutoHide);
-            _editorDockContent.Text = "Fractal Transformations Editor";
-            _editorDockContent.HideOnClose = true;
-        }
-
-        private void InitFractalDataGrid()
-        {
-            if (_dataGridDockContent != null)
-            {
-                _dataGridDockContent.Activate();
-                return;
-            }
-            _dataGridDockContent = new DockContent();
-            _fractalDataGridView.Dock = DockStyle.Fill;
-            _dataGridDockContent.Controls.Add(_fractalDataGridView);
-            _dataGridDockContent.Show(_dockPanel, DockState.DockLeftAutoHide);
-            _dataGridDockContent.Text = "Fractal Data Grid";
-            _dataGridDockContent.HideOnClose = true;
-        }
-
-        private void IntializeFractalEditors()
-        {
-            InitTrackBarsControlPanel();
-            InitNumbersControlPanel();
-            InitFractalEditor();
-            InitFractalDataGrid();
         }
 
         private void dSierpinskiCarpetToolStripMenuItem_Click(object sender, EventArgs e)
@@ -326,22 +215,22 @@ namespace IFS
 
         private void _trackBarsControlPanelToolStripMenuItemClick(object sender, System.EventArgs e)
         {
-            InitTrackBarsControlPanel();
+            TrackBarsControlMenuItemClick?.Invoke(sender, e);
         }
 
         private void _numbersControlPanelToolStripMenuItemClick(object sender, System.EventArgs e)
         {
-            InitNumbersControlPanel();
+            NumbersControlMenuItemClick?.Invoke(sender, e);
         }
 
         private void _fractalEditorToolStripMenuItemClick(object sender, System.EventArgs e)
         {
-            InitFractalEditor();
+            FractalEditorMenuItemClick?.Invoke(sender, e);
         }
 
         private void fractalDataGridToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            InitFractalDataGrid();
+            FractalDataGridMenuItemClick?.Invoke(sender, e);
         }
     }
 }

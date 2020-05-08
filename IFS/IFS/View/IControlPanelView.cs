@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using FractalRendererLibrary.Events;
+using System.Windows.Forms;
 
 namespace IFS.View
 {
@@ -26,5 +27,7 @@ namespace IFS.View
         string ZoomPointY { get; }
 
         void RefreshView(int x, int y, float zoom, int rotation, PointF zoomPoint, PointF rotPoint);
+
+        UserControl UserControl { get; }
     }
 }

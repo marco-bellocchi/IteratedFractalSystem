@@ -30,12 +30,23 @@ namespace IFS.View
         event EventHandler DisplayGDIClick;
         event EventHandler DisplayOpenGLClick;
         event EventHandler CompositeViewClosed;
+        event EventHandler TrackBarsControlMenuItemClick;
+        event EventHandler NumbersControlMenuItemClick;
+        event EventHandler FractalEditorMenuItemClick;
+        event EventHandler FractalDataGridMenuItemClick;
 
         IDictionary<IDockContent, IFractal> DockContentFractalDictionary { get; }
 
         DockPanel DockPanel { get; }
 
+        DockContent NumberDockContent { get; set; }
+        DockContent TrackBarsDockContent { get; set; }
+        DockContent DataGridDockContent { get; set; }
+        DockContent EditorDockContent { get; set; }
+
         ToolStripItem AddMenuItem(string name);
+        ToolStripMenuItem GdiToolStripMenuItem { get; }
+        ToolStripMenuItem OpenGlToolStripMenuItem { get; }
 
         void ShowMessageBox(string p);
 
@@ -48,14 +59,6 @@ namespace IFS.View
         bool AskForFilePathToOpen(out string filePath);
 
         DialogResult AskSaving();
-
-        void ClearAll();
-
-        void Select(IFractal _selected);
-
-        void DisplayRendering(RenderingEnum rendering);
-
-
 
     }
 }
