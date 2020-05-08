@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F094909E-B31C-4BBC-89AF-DB0467E0DD19}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FractalOpenGLExtra</RootNamespace>
+    <AssemblyName>FractalOpenGLExtra</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="JuliaSetFractalAnimation.cs" />
+    <Compile Include="OpenGLExampleFacade.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shapes\Base\DrawableShape.cs" />
+    <Compile Include="Shapes\Base\VertexStructs.cs" />
+    <Compile Include="Shapes\Capsule.cs" />
+    <Compile Include="Shapes\ChamferCube.cs" />
+    <Compile Include="Shapes\Helpers\Chunk.cs" />
+    <Compile Include="Shapes\Helpers\MengerCube.cs" />
+    <Compile Include="Shapes\Helpers\TetrahedronFace.cs" />
+    <Compile Include="Shapes\Helpers\VboShape.cs" />
+    <Compile Include="Shapes\KochTetrahedron.cs" />
+    <Compile Include="Shapes\MengerSponge.cs" />
+    <Compile Include="Shapes\Old\IsoSphere.cs" />
+    <Compile Include="Shapes\Old\Plane.cs" />
+    <Compile Include="Shapes\Old\Shape.cs" />
+    <Compile Include="Shapes\Old\SierpinskiTetrahedron.cs" />
+    <Compile Include="Shapes\SlicedHose.cs" />
+    <Compile Include="Shapes\SlicedSphere.cs" />
+    <Compile Include="Shapes\TorusKnot.cs" />
+    <Compile Include="Shapes\VertexPositionColor.cs" />
+    <Compile Include="SierpinskiCarpet3DFractalAnimation.cs" />
+    <Compile Include="Utilities\LoaderDDS.cs" />
+    <Compile Include="Utilities\LoaderGDI.cs" />
+    <Compile Include="Utilities\LoaderStatics.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

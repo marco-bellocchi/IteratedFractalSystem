@@ -1,0 +1,248 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{E4919F96-B182-4D35-AF09-E128C21FC3EA}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>IFS</RootNamespace>
+    <AssemblyName>IFS</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DebugType>Full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>None</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.4.0.32580, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\External\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MainForm2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm2.Designer.cs">
+      <DependentUpon>MainForm2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presenter\FractalEditorViewPresenter.cs" />
+    <Compile Include="Presenter\FractalCalculatorViewPresenter.cs" />
+    <Compile Include="Presenter\FractalCompilerViewPresenter.cs" />
+    <Compile Include="Presenter\FractalDataGridViewPresenter.cs" />
+    <Compile Include="Presenter\FractalViewPresenter.cs" />
+    <Compile Include="Presenter\ControlPanelViewPresenter.cs" />
+    <Compile Include="Presenter\MainViewPresenter.cs" />
+    <Compile Include="Presenter\RenderingEnum.cs" />
+    <Compile Include="Presenter\ViewValidator\ControlPanelSlimViewValidator.cs" />
+    <Compile Include="Presenter\ViewValidator\ControlPanelVerboseViewValidator.cs" />
+    <Compile Include="Presenter\ViewValidator\ControlPanelViewValidatorBase.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Events\ValidatingEventArgs.cs" />
+    <Compile Include="View\FractalCalculatorView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\FractalCalculatorView.Designer.cs">
+      <DependentUpon>FractalCalculatorView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\FractalCompilerView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\FractalCompilerView.Designer.cs">
+      <DependentUpon>FractalCompilerView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\FractalCompositeView2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\FractalCompositeView2.Designer.cs">
+      <DependentUpon>FractalCompositeView2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\FractalDataGridView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\FractalDataGridView.Designer.cs">
+      <DependentUpon>FractalDataGridView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\FractalEditorView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\FractalEditorView.Designer.cs">
+      <DependentUpon>FractalEditorView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Helpers\FileDialogHelper.cs" />
+    <Compile Include="View\IControlPanelView.cs" />
+    <Compile Include="View\IFractalCalculatorView.cs" />
+    <Compile Include="View\IFractalCompilerView.cs" />
+    <Compile Include="View\IFractalCompositeView.cs" />
+    <Compile Include="View\IFractalDataGridView.cs" />
+    <Compile Include="View\IFractalEditorView.cs" />
+    <Compile Include="View\IMainView.cs" />
+    <Compile Include="View\IView.cs" />
+    <Compile Include="View\TrackBarControlPanelView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\TrackBarControlPanelView.Designer.cs">
+      <DependentUpon>TrackBarControlPanelView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\NumbersControlPanelView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\NumbersControlPanelView.Designer.cs">
+      <DependentUpon>NumbersControlPanelView.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Data\Shaders\JuliaSet_SM2_FS.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\Shaders\JuliaSet_SM3_FS.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data\Shaders\JuliaSet_VS.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm2.resx">
+      <DependentUpon>MainForm2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\FractalCalculatorView.resx">
+      <DependentUpon>FractalCalculatorView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\FractalCompilerView.resx">
+      <DependentUpon>FractalCompilerView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\FractalCompositeView2.resx">
+      <DependentUpon>FractalCompositeView2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\FractalDataGridView.resx">
+      <DependentUpon>FractalDataGridView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\FractalEditorView.resx">
+      <DependentUpon>FractalEditorView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\NumbersControlPanelView.resx">
+      <DependentUpon>NumbersControlPanelView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\TrackBarControlPanelView.resx">
+      <DependentUpon>TrackBarControlPanelView.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FractalDimensionLibrary\FractalDimensionLibrary.csproj">
+      <Project>{E133F7B7-5312-43B1-8660-A7B3470E1A27}</Project>
+      <Name>FractalDimensionLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FractalLibrary\FractalLibrary.csproj">
+      <Project>{0BB21F26-985D-4CC1-9D42-43B099ADB96B}</Project>
+      <Name>FractalLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FractalOpenGLExtra\FractalOpenGLExtra.csproj">
+      <Project>{F094909E-B31C-4BBC-89AF-DB0467E0DD19}</Project>
+      <Name>FractalOpenGLExtra</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FractalRendererLibrary\FractalRendererLibrary.csproj">
+      <Project>{670F1E62-81ED-4972-80F5-EC869467EB4D}</Project>
+      <Name>FractalRendererLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GDIFractalRendererLibrary\GDIFractalRendererLibrary.csproj">
+      <Project>{0E95D406-AD80-48E7-B7E8-CB355DEB5CAB}</Project>
+      <Name>GDIFractalRendererLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Logger\Logger.csproj">
+      <Project>{F55C8525-0EA8-4C98-A269-60D069810D17}</Project>
+      <Name>Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MyPluginFractals\MyPluginFractals.csproj">
+      <Project>{D646F33B-6FEA-43DD-B64A-E7BC11918AFB}</Project>
+      <Name>MyPluginFractals</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OpenGLFractalRenderer\OpenGLFractalRenderer.csproj">
+      <Project>{EDC397A8-07CE-4AB5-9D2E-F77120F81E8C}</Project>
+      <Name>OpenGLFractalRenderer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\TransformationsLibrary\TransformationsLibrary.csproj">
+      <Project>{ED6A362E-41FA-4EA2-AB12-1DE3859D5442}</Project>
+      <Name>TransformationsLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ValidatorLibrary\ValidatorsLibrary.csproj">
+      <Project>{87FBA766-9018-4F09-ADB0-4DF6189424CD}</Project>
+      <Name>ValidatorsLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Xml Editor\Xml Editor.csproj">
+      <Project>{5FBB3AD1-697C-4B05-B1D4-DA1B83B84B13}</Project>
+      <Name>Xml Editor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\Textures\JuliaColorTable.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
