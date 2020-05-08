@@ -41,9 +41,7 @@ namespace IFS
 
             var mainForm = new MainForm2(tbc, ncp, fdg, fev);
             var boxDimensionCalculatorFactory = new BoxDimensionCalculatorFactory();
-            var mainPresenter = new MainViewPresenter(
-                mainForm, tbc, ncp,fdg,fev, boxDimensionCalculatorFactory);
-            mainForm.MainViewPresenter = mainPresenter;
+            var mainPresenter = new MainViewPresenter(mainForm, tbc, ncp,fdg,fev, boxDimensionCalculatorFactory);
             
             Application.Run(mainForm);
 		}

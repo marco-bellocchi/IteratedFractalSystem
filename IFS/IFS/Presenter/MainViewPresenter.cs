@@ -15,6 +15,7 @@ using FractalLibrary.Events;
 using FractalOpenGLExtra;
 using System.IO;
 using FractalRendererLibrary.Model;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace FractalRendererLibrary.Presenter
 {
@@ -74,10 +75,40 @@ namespace FractalRendererLibrary.Presenter
             _editorViewPresenter = new FractalEditorViewPresenter(_fractalEditorView);
 
             _dimensionCalculatorFactory = dimensionCalculatorFactory;
-            _mainView.SelectedChanged += new SelectedFractalEventHandler(SelectedFractalChanged);
+           
             _document = FractalDocument.GetInstance();
-            _mainView.Load += new EventHandler(_mainView_Load);
             _document.Changed += new EventHandler(_document_Changed);
+            _mainView.Load += new EventHandler(_mainView_Load);
+            _mainView.SelectedChanged += new SelectedFractalEventHandler(SelectedFractalChanged);
+            _mainView.DisplaySierpinsky3DClick += MainView_DisplaySierpinsky3DClick;
+            _mainView.DisplayJuliaSetAnimationClick += _mainView_DisplayJuliaSetAnimationClick;
+            _mainView.NewDocumentClick += _mainView_NewDocumentClick;
+            _mainView.OpenDocumentClick += _mainView_OpenDocumentClick;
+            _mainView.SaveDocumentClick += _mainView_SaveDocumentClick;
+            _mainView.SaveAsDocumentClick += _mainView_SaveAsDocumentClick;
+            _mainView.ExitApplicationClick += _mainView_ExitApplicationClick;
+            _mainView.NewFractalClick += _mainView_NewFractalClick;
+            _mainView.OpenFractalClick += _mainView_OpenFractalClick;
+            _mainView.DisplayGDIClick += _mainView_DisplayGDIClick;
+            _mainView.DisplayOpenGLClick += _mainView_DisplayOpenGLClick;
+            _mainView.CompositeViewClosed += _mainView_CompositeViewClosed;
+        }
+
+        private void _mainView_CompositeViewClosed(object sender, EventArgs e)
+        {
+            var compositeView = sender as FractalCompositeView2;
+            if (compositeView != null)
+            {
+                if (_mainView.DockContentFractalDictionary.ContainsKey(compositeView))
+                {
+                    var fractal = _mainView.DockContentFractalDictionary[compositeView];
+                    if (fractal != null)
+                    {
+                        Remove(fractal);
+                        _mainView.DockContentFractalDictionary.Remove(compositeView);
+                    }
+                }
+            }
         }
 
         public IRendererAbstractFactory RendererAbstractFactory
@@ -217,7 +248,9 @@ namespace FractalRendererLibrary.Presenter
         public void Remove(IFractal fractal)
         {
             if (_canRemoveFractals)
+            {
                 _document.RemoveFractal(fractal);
+            }
         }
 
         public void LoadFractal(IFractal fractal)
@@ -279,11 +312,69 @@ namespace FractalRendererLibrary.Presenter
             facade.RunJuliaSet();
         }
 
+
+        private void _mainView_DisplayOpenGLClick(object sender, EventArgs e)
+        {
+            DisplayOpenGL();
+        }
+
+        private void _mainView_DisplayGDIClick(object sender, EventArgs e)
+        {
+            DisplayGDI();
+        }
+
+        private void _mainView_OpenFractalClick(object sender, EventArgs e)
+        {
+            OpenFractal();
+        }
+
+        private void _mainView_NewFractalClick(object sender, EventArgs e)
+        {
+            NewFractal();
+        }
+
+        private void _mainView_ExitApplicationClick(object sender, EventArgs e)
+        {
+            ExitApplication();
+        }
+
+        private void _mainView_SaveAsDocumentClick(object sender, EventArgs e)
+        {
+            SaveDocumentAs();
+        }
+
+        private void _mainView_SaveDocumentClick(object sender, EventArgs e)
+        {
+            SaveDocument();
+        }
+
+        private void _mainView_OpenDocumentClick(object sender, EventArgs e)
+        {
+            OpenDocument();
+        }
+
+        private void _mainView_NewDocumentClick(object sender, EventArgs e)
+        {
+            NewDocument();
+        }
+
+        private void _mainView_DisplayJuliaSetAnimationClick(object sender, EventArgs e)
+        {
+            DisplayJuliaSetAnimation();
+        }
+
+        private void MainView_DisplaySierpinsky3DClick(object sender, EventArgs e)
+        {
+            DisplaySierpinsky3D();
+        }
+
         private void InitPredefinedMenuFractals()
         {
             foreach (var fractalCreator in _document.PredefinedFractalCreators)
             {
-                _mainView.AddPredefinedFractalMenu(fractalCreator);
+                var menuItem = _mainView.AddMenuItem(fractalCreator.Name);
+                menuItem.Click += new EventHandler
+                    ((s, e) => LoadFractal(fractalCreator.Create()));
             }
         }
 
@@ -298,7 +389,52 @@ namespace FractalRendererLibrary.Presenter
                 tmpControlPanel.Zoom = 100;
                 _viewStatus.Add(fractal, tmpControlPanel);
             }
-            _mainView.ShowFractal(fractal, _viewStatus[fractal]);
+            FractalCompositeView2 compositeView = new FractalCompositeView2();
+            compositeView.FractalView = RendererAbstractFactory.CreateFractalView();
+            InitFractalCompositeView(fractal, compositeView, _viewStatus[fractal]);
+            compositeView.Text = fractal.Name;
+            compositeView.Dock = DockStyle.Fill;
+            compositeView.Activated += (s, e) =>
+            {
+                var dockContent = s as IDockContent;
+                if (dockContent == null)
+                    return;
+                if (fractal != null)
+                    _selected = fractal;
+                    RefreshMainView();
+            };
+            compositeView.FormClosed += compositeViewClosed;
+            compositeView.Show(_mainView.DockPanel);
+            _mainView.DockContentFractalDictionary[compositeView] = fractal;
+        }
+
+        private void compositeViewClosed(object sender, EventArgs e)
+        {
+            var compositeView = sender as FractalCompositeView2;
+            if (compositeView != null)
+            {
+                if (_mainView.DockContentFractalDictionary.ContainsKey(compositeView))
+                {
+                    var fractal = _mainView.DockContentFractalDictionary[compositeView];
+                    if (fractal != null)
+                    {
+                        Remove(fractal);
+                        _mainView.DockContentFractalDictionary.Remove(compositeView);
+                    }
+                }
+            }
+        }
+
+        private void InitFractalCompositeView(IFractal fractal, FractalCompositeView2 view, IControlPanel controlPanel)
+        {
+                int pointsToCalculate = 100000;//TODO should be moved
+                controlPanel.Rectangle = view.FractalView.DrawableRectangle;
+                view.FractalCalculatorView.RefreshView(pointsToCalculate);
+                FractalCalculatorViewPresenter presenter3 = new FractalCalculatorViewPresenter(fractal, DimensionCalculatorFactory,
+                    view.FractalCalculatorView, controlPanel);
+                FractalViewPresenterBase fractalViewPresenter =
+                    RendererAbstractFactory.CreateFractalViewPresenter(fractal, controlPanel, view.FractalView,
+                    RendererAbstractFactory.CreateRenderer(view.FractalView));
         }
 
         private void _mainView_Load(object sender, EventArgs e)

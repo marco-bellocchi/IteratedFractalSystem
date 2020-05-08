@@ -46,11 +46,21 @@ namespace IFS
         private FractalDataGridView _fractalDataGridView;
         private FractalEditorView _fractalEditorView;
 
-        private MainViewPresenter _mainViewPresenter;
-
         private IDictionary<IDockContent, IFractal> _dockContentFractalDictionary = new Dictionary<IDockContent, IFractal>();
 
         public event SelectedFractalEventHandler SelectedChanged;
+        public event EventHandler DisplaySierpinsky3DClick;
+        public event EventHandler DisplayJuliaSetAnimationClick;
+        public event EventHandler NewDocumentClick;
+        public event EventHandler OpenDocumentClick;
+        public event EventHandler SaveDocumentClick;
+        public event EventHandler SaveAsDocumentClick;
+        public event EventHandler ExitApplicationClick;
+        public event EventHandler NewFractalClick;
+        public event EventHandler OpenFractalClick;
+        public event EventHandler DisplayGDIClick;
+        public event EventHandler DisplayOpenGLClick;
+        public event EventHandler CompositeViewClosed;
 
         public MainForm2(
             TrackBarControlPanelView trackBarControlPanelView,
@@ -67,43 +77,13 @@ namespace IFS
             _numbersControlPanelView = numbersControlPanelView;
             _fractalDataGridView = fractalDataGridView;
             _fractalEditorView = fractalEditorView;
+            IntializeFractalEditors();
         }
 
-        public MainViewPresenter MainViewPresenter
-        {
-            get
-            {
-                return _mainViewPresenter;
-            }
-            set
-            {
-                _mainViewPresenter = value;
-                IntializeFractalEditors();
-            }
-        }
+        public IDictionary<IDockContent, IFractal> DockContentFractalDictionary { get { return _dockContentFractalDictionary; } }
 
-        public void ShowFractal(IFractal fractal, IControlPanel controlPanel)
-        {
-            if (MainViewPresenter != null)
-            {
-                FractalCompositeView2 compositeView = new FractalCompositeView2();
-                compositeView.FractalView = MainViewPresenter.RendererAbstractFactory.CreateFractalView();
-                InitFractalCompositeView(fractal, compositeView, controlPanel);
-                compositeView.Text = fractal.Name;
-                compositeView.Dock = DockStyle.Fill;
-                compositeView.Activated += (s,e)=>
-                    {
-                         var dockContent = s as IDockContent;
-                        if (dockContent == null)
-                            return;
-                        if (fractal != null)
-                            OnSelectedChanged(fractal);
-                    };
-                compositeView.FormClosed += compositeViewClosed;
-                compositeView.Show(_dockPanel);
-                _dockContentFractalDictionary[compositeView] = fractal;
-            }
-        }
+        public DockPanel DockPanel { get { return _dockPanel; } }
+        
 
         public bool AskForFilePathToOpen(out string filePath)
         {
@@ -186,14 +166,9 @@ namespace IFS
             }
         }
 
-        public void AddPredefinedFractalMenu(FractalLibrary.Model.IFractalCreator creator)
+        public ToolStripItem AddMenuItem(string name)
         {
-            if (MainViewPresenter != null)
-            {
-                var menuItem = _predefinedFractalsToolStripMenuItem.DropDownItems.Add(creator.Name);
-                menuItem.Click += new EventHandler
-                    ((s, e) => MainViewPresenter.LoadFractal(creator.Create()));
-            }
+            return _predefinedFractalsToolStripMenuItem.DropDownItems.Add(name);
         }
 
         private void InitTrackBarsControlPanel()
@@ -266,138 +241,81 @@ namespace IFS
 
         private void dSierpinskiCarpetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.DisplaySierpinsky3D();
-            }
+            DisplaySierpinsky3DClick?.Invoke(sender, e);
         }
 
         private void dJULIASToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.DisplayJuliaSetAnimation();
-            }
+            DisplayJuliaSetAnimationClick?.Invoke(sender, e);
+
         }
 
         private void _newDocumentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.NewDocument();
-            }
+            NewDocumentClick?.Invoke(sender, e);
         }
 
         private void _openDocumentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.OpenDocument();
-            }
+           OpenDocumentClick?.Invoke(sender, e);
         }
 
         private void _saveDocumentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.SaveDocument();
-            }
+            SaveDocumentClick?.Invoke(sender, e);
         }
 
         private void _saveAsDocumentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.SaveDocumentAs();
-            }
+            SaveAsDocumentClick?.Invoke(sender, e);
         }
 
         private void _exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.ExitApplication();
-            }
+            ExitApplicationClick?.Invoke(sender, e);
         }
 
         private void _newFractalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.NewFractal();
-            }
+            NewFractalClick?.Invoke(sender, e);
         }
 
         private void _openFractalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.OpenFractal();
-            }
+            OpenFractalClick?.Invoke(sender, e);
         }
 
         private void _gdiToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.DisplayGDI();
-            }
+            DisplayGDIClick?.Invoke(sender, e);
         }
 
         private void _openGLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.DisplayOpenGL();
-            }
+            DisplayOpenGLClick?.Invoke(sender, e);
         }
+
 
         private void _aboutIFS10ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MessageBox.Show("Written by Marco M Bellocchi.","IFS 1.0");
-            }
+
+           MessageBox.Show("Written by Marco M Bellocchi.","IFS 1.0");
+           
         }
 
         private void compositeViewClosed(object sender, EventArgs e)
         {
-            var compositeView = sender as FractalCompositeView2;
-            if (compositeView != null)
-            {
-                if (_dockContentFractalDictionary.ContainsKey(compositeView))
-                {
-                    var fractal = _dockContentFractalDictionary[compositeView];
-                    if (fractal != null)
-                    {
-                        MainViewPresenter.Remove(fractal);
-                        _dockContentFractalDictionary.Remove(compositeView);
-                    }
-                }
-            }
+            CompositeViewClosed?.Invoke(sender, e);
         }
 
-        private void InitFractalCompositeView(IFractal fractal, FractalCompositeView2 view, IControlPanel controlPanel)
+        private void OnCompositeViewClosed(object sender, EventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                int pointsToCalculate = 100000;//TODO should be moved
-                controlPanel.Rectangle = view.FractalView.DrawableRectangle;
-                view.FractalCalculatorView.RefreshView(pointsToCalculate);
-                FractalCalculatorViewPresenter presenter3 = new FractalCalculatorViewPresenter(fractal, MainViewPresenter.DimensionCalculatorFactory,
-                    view.FractalCalculatorView, controlPanel);
-                FractalViewPresenterBase fractalViewPresenter =
-                    MainViewPresenter.RendererAbstractFactory.CreateFractalViewPresenter(fractal, controlPanel, view.FractalView,
-                    MainViewPresenter.RendererAbstractFactory.CreateRenderer(view.FractalView));
-            }
+            throw new NotImplementedException();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (MainViewPresenter != null)
-            {
-                MainViewPresenter.ExitApplication();
-            }
+            ExitApplicationClick?.Invoke(sender, e);
         }
 
         protected virtual void OnSelectedChanged(IFractal fractal)
