@@ -26,6 +26,7 @@ namespace FractalRendererLibrary.Presenter
         private IDimensionCalculatorFactory _dimensionCalculatorFactory;
         private IRendererAbstractFactory _rendererAbstractFactory;
         private Dictionary<IFractal, IControlPanel> _viewStatus = new Dictionary<IFractal, IControlPanel>();
+        private IDictionary<IDockContent, IFractal> _dockContentFractalDictionary = new Dictionary<IDockContent, IFractal>();
         private IFractal _selected;
         private bool _showingIsDirty;
         private bool _isClosing;
@@ -99,6 +100,22 @@ namespace FractalRendererLibrary.Presenter
             _mainView.FractalDataGridMenuItemClick += _mainView_FractalDataGridMenuItemClick;
         }
 
+        private IRendererAbstractFactory RendererAbstractFactory
+        {
+            get
+            {
+                return _rendererAbstractFactory;
+            }
+        }
+
+        private IDimensionCalculatorFactory DimensionCalculatorFactory
+        {
+            get
+            {
+                return _dimensionCalculatorFactory;
+            }
+        }
+
         private void _mainView_FractalDataGridMenuItemClick(object sender, EventArgs e)
         {
             InitFractalDataGrid();
@@ -124,36 +141,21 @@ namespace FractalRendererLibrary.Presenter
             var compositeView = sender as FractalCompositeView2;
             if (compositeView != null)
             {
-                if (_mainView.DockContentFractalDictionary.ContainsKey(compositeView))
+                if (_dockContentFractalDictionary.ContainsKey(compositeView))
                 {
-                    var fractal = _mainView.DockContentFractalDictionary[compositeView];
+                    var fractal = _dockContentFractalDictionary[compositeView];
                     if (fractal != null)
                     {
                         Remove(fractal);
-                        _mainView.DockContentFractalDictionary.Remove(compositeView);
+                        _dockContentFractalDictionary.Remove(compositeView);
                     }
                 }
             }
         }
 
-        public IRendererAbstractFactory RendererAbstractFactory
-        {
-            get
-            {
-                return _rendererAbstractFactory;
-            }
-        }
-
-        public IDimensionCalculatorFactory DimensionCalculatorFactory
-        {
-            get
-            {
-                return _dimensionCalculatorFactory;
-            }
-        }
 
         //Save logic goes here
-        public void NewDocument()
+        private void NewDocument()
         {
             if (_document.IsDirty)
             {
@@ -166,7 +168,7 @@ namespace FractalRendererLibrary.Presenter
             FractalDocument.GetInstance().New();
         }
 
-        public void OpenDocument()
+        private void OpenDocument()
         {
             if (_document.IsDirty)
             {
@@ -191,7 +193,7 @@ namespace FractalRendererLibrary.Presenter
             }
         }
 
-        public void SaveDocument()
+        private void SaveDocument()
         {
             if (_document.Fractals.Count == 0)
                 return;
@@ -205,7 +207,7 @@ namespace FractalRendererLibrary.Presenter
             }
         }
 
-        public void SaveDocumentAs()
+        private void SaveDocumentAs()
         {
             if (_document.Fractals.Count == 0)
                 return;
@@ -224,7 +226,7 @@ namespace FractalRendererLibrary.Presenter
             }
         }
 
-        public void ExitApplication()
+        private void ExitApplication()
         {
             if (!_isClosing)
             {
@@ -241,7 +243,7 @@ namespace FractalRendererLibrary.Presenter
             }
         }
 
-        public void NewFractal()
+        private void NewFractal()
         {
             NewFractal(string.Empty);
         }
@@ -255,7 +257,7 @@ namespace FractalRendererLibrary.Presenter
             view.ShowDialog();
         }
 
-        public void OpenFractal()
+        private void OpenFractal()
         {
             string filePath;
             bool ok = _mainView.AskForFilePathToOpen(out filePath);
@@ -270,7 +272,7 @@ namespace FractalRendererLibrary.Presenter
             }
         }
 
-        public void Remove(IFractal fractal)
+        private void Remove(IFractal fractal)
         {
             if (_canRemoveFractals)
             {
@@ -278,12 +280,12 @@ namespace FractalRendererLibrary.Presenter
             }
         }
 
-        public void LoadFractal(IFractal fractal)
+        private void LoadFractal(IFractal fractal)
         {
             _document.LoadFractal(fractal);
         }
 
-        public void DisplayGDI()
+        private void DisplayGDI()
         {
             try
             {
@@ -311,9 +313,9 @@ namespace FractalRendererLibrary.Presenter
                 if (_mainView.DockPanel.Contents[index] is IDockContent)
                 {
                     IDockContent content = (IDockContent)_mainView.DockPanel.Contents[index];
-                    if (_mainView.DockContentFractalDictionary.ContainsKey(content))
+                    if (_dockContentFractalDictionary.ContainsKey(content))
                     {
-                        var fractal = _mainView.DockContentFractalDictionary[content];
+                        var fractal = _dockContentFractalDictionary[content];
                         if (fractal == selected)
                         {
                             content.DockHandler.Activate();
@@ -340,7 +342,7 @@ namespace FractalRendererLibrary.Presenter
 
         private void ClearAll()
         {
-            _mainView.DockContentFractalDictionary.Clear();
+            _dockContentFractalDictionary.Clear();
             for (int index = _mainView.DockPanel.Contents.Count - 1; index >= 0; index--)
             {
                 if (_mainView.DockPanel.Contents[index] is IDockContent)
@@ -355,7 +357,7 @@ namespace FractalRendererLibrary.Presenter
             }
         }
 
-        public void DisplayOpenGL()
+        private void DisplayOpenGL()
         {
             try
             {
@@ -376,13 +378,13 @@ namespace FractalRendererLibrary.Presenter
             }
         }
 
-        public void DisplaySierpinsky3D()
+        private void DisplaySierpinsky3D()
         {
             OpenGLExampleFacade facade = new OpenGLExampleFacade();
             facade.RunSierpinskiCarpet();
         }
 
-        public void DisplayJuliaSetAnimation()
+        private void DisplayJuliaSetAnimation()
         {
             OpenGLExampleFacade facade = new OpenGLExampleFacade();
             facade.RunJuliaSet();
@@ -481,7 +483,7 @@ namespace FractalRendererLibrary.Presenter
             };
             compositeView.FormClosed += compositeViewClosed;
             compositeView.Show(_mainView.DockPanel);
-            _mainView.DockContentFractalDictionary[compositeView] = fractal;
+            _dockContentFractalDictionary[compositeView] = fractal;
         }
 
         private void compositeViewClosed(object sender, EventArgs e)
@@ -489,13 +491,13 @@ namespace FractalRendererLibrary.Presenter
             var compositeView = sender as FractalCompositeView2;
             if (compositeView != null)
             {
-                if (_mainView.DockContentFractalDictionary.ContainsKey(compositeView))
+                if (_dockContentFractalDictionary.ContainsKey(compositeView))
                 {
-                    var fractal = _mainView.DockContentFractalDictionary[compositeView];
+                    var fractal = _dockContentFractalDictionary[compositeView];
                     if (fractal != null)
                     {
                         Remove(fractal);
-                        _mainView.DockContentFractalDictionary.Remove(compositeView);
+                        _dockContentFractalDictionary.Remove(compositeView);
                     }
                 }
             }
@@ -506,7 +508,7 @@ namespace FractalRendererLibrary.Presenter
                 int pointsToCalculate = 100000;//TODO should be moved
                 controlPanel.Rectangle = view.FractalView.DrawableRectangle;
                 view.FractalCalculatorView.RefreshView(pointsToCalculate);
-                FractalCalculatorViewPresenter presenter3 = new FractalCalculatorViewPresenter(fractal, DimensionCalculatorFactory,
+                FractalCalculatorViewPresenter fractalCalculatorViewPresenter = new FractalCalculatorViewPresenter(fractal, DimensionCalculatorFactory,
                     view.FractalCalculatorView, controlPanel);
                 FractalViewPresenterBase fractalViewPresenter =
                     RendererAbstractFactory.CreateFractalViewPresenter(fractal, controlPanel, view.FractalView,

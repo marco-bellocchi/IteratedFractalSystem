@@ -41,7 +41,6 @@ namespace IFS
         private DockContent _dataGridDockContent;
         private DockContent _editorDockContent;
 
-        private IDictionary<IDockContent, IFractal> _dockContentFractalDictionary = new Dictionary<IDockContent, IFractal>();
 
         public event SelectedFractalEventHandler SelectedChanged;
         public event EventHandler DisplaySierpinsky3DClick;
@@ -70,7 +69,6 @@ namespace IFS
                ControlStyles.AllPaintingInWmPaint, true);
         }
 
-        public IDictionary<IDockContent, IFractal> DockContentFractalDictionary { get { return _dockContentFractalDictionary; } }
         public DockPanel DockPanel { get { return _dockPanel; } }
         public DockContent NumberDockContent { get { return _numberDockContent; } set { _numberDockContent = value; } }
         public DockContent TrackBarsDockContent { get { return _trackBarsDockContent; } set { _trackBarsDockContent = value; } }

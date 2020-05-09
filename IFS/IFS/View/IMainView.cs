@@ -35,8 +35,6 @@ namespace IFS.View
         event EventHandler FractalEditorMenuItemClick;
         event EventHandler FractalDataGridMenuItemClick;
 
-        IDictionary<IDockContent, IFractal> DockContentFractalDictionary { get; }
-
         DockPanel DockPanel { get; }
 
         DockContent NumberDockContent { get; set; }
