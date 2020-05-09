@@ -390,7 +390,6 @@ namespace FractalRendererLibrary.Presenter
             facade.RunJuliaSet();
         }
 
-
         private void _mainView_DisplayOpenGLClick(object sender, EventArgs e)
         {
             DisplayOpenGL();
