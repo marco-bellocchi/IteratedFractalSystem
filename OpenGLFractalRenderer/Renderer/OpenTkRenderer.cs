@@ -34,7 +34,6 @@ namespace OpenGLFractalRenderer.Renderer
             lock (_syncRendering)
             {
                 int vbo = -1;
-                RectangleF rectangle = controlPanel.Rectangle;
                 try
                 {
                     GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
